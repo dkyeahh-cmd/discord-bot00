@@ -8,22 +8,22 @@ const client = new Client({
 });
 
 // الأيدي تبع الروم الصوتي اللي تبيه يجلس فيه (حط أيدي الروم هنا)
-const VOICE_CHANNEL_ID = '1572334111719428188'; 
+const VOICE_CHANNEL_ID = '157233411719428188';
 
 client.once('ready', async () => {
-    console.log(`تم تسجيل الدخول بنجاح باسم: ${client.user.tag}`);
+    console.log(`تم تسجيل الدخول بنجاح باسم ${client.user.tag}`);
 
-    // ضبط حالة البوت على Streaming
+    // Streaming ضبط حالة البوت على //
     client.user.setPresence({
         activities: [{
-            name: 'اسم البث أو الحالة حقك',
-            type: ActivityType.Streaming,
-            url: 'https://www.twitch.tv/twitch' // رابط تويتش وهمي عشان تضبط علامة البربل
+            name: 'اسم البوت أو الحالة حقك',
+            type: Activity.Streaming,
+            url: 'https://www.twitch.tv/twitch' // رابط توتش وهمي عشان تضبط علامة البريل //
         }],
         status: 'online',
     });
 
-    // محاولة دخول الروم الصوتي أول ما يشتغل
+    // محاولة دخول الروم الصوتي أول ما يشتغل //
     try {
         const channel = await client.channels.fetch(VOICE_CHANNEL_ID);
         if (channel && channel.isVoiceBased()) {
@@ -32,15 +32,17 @@ client.once('ready', async () => {
                 channelId: channel.id,
                 guildId: channel.guild.id,
                 adapterCreator: channel.guild.voiceAdapterCreator,
+                selfDeaf: false,
+                selfMute: true
             });
-            console.log(`دخل البوت الروم الصوتي بنجاح: ${channel.name}`);
+            console.log(`تم بنجاح الانضمام للروم الصوتي: ${channel.name}`);
         } else {
-            console.log('ما قدرت أحصل الروم الصوتي، تأكد من الأيدي!');
+            console.log('الروم الصوتي غير موجود أو الأيدي خطأ!');
         }
     } catch (error) {
         console.error('صار خطأ أثناء محاولة دخول الروم الصوتي:', error);
     }
 });
 
-// ضع توكن بوتك هنا (يفضل ينحط في بيئة العمل بس كبداية حطه هنا لو تبي)
-client.login('');
+// تسجيل الدخول بطريقة آمنة باستخدام متغير البيئة السري
+client.login(process.env.DISCORD_TOKEN);
