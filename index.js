@@ -14,7 +14,17 @@ const VOICE_CHANNEL_ID = '1572334111719428188';
 client.once('ready', async () => {
     console.log(`تم تسجيل الدخول بنجاح باسم ${client.user.tag}`);
 
-    // محاولة دخول الروم الصوتي مع حماية كاملة ضد الأخطاء
+    // ضبط حالة البوت على Streaming بشكل صحيح ومفعل
+    client.user.setPresence({
+        activities: [{
+            name: 'اسم البوت أو الحالة حقك هنا',
+            type: ActivityType.Streaming,
+            url: 'https://www.twitch.tv/twitch' // رابط توتش ضروري عشان تظهر علامة البث البنفسجية
+        }],
+        status: 'online',
+    });
+
+    // محاولة دخول الروم الصوتي مع عكس إعدادات المايك والسماعة
     try {
         const channel = await client.channels.fetch(VOICE_CHANNEL_ID);
         if (channel && channel.isVoiceBased()) {
@@ -22,15 +32,15 @@ client.once('ready', async () => {
                 channelId: channel.id,
                 guildId: channel.guild.id,
                 adapterCreator: channel.guild.voiceAdapterCreator,
-                selfDeaf: false,
-                selfMute: true
+                selfDeaf: true,   // السماعة مغلقة (Deafened)
+                selfMute: false   // المايك مفتوح (Unmuted)
             });
             console.log(`تم بنجاح الانضمام للروم الصوتي: ${channel.name}`);
         } else {
             console.log('الروم الصوتي غير موجود أو ليس روم صوتي!');
         }
     } catch (error) {
-        console.error('خطأ أثناء محاولة دخول الروم الصوتي (تأكد أن البوت يملك صلاحية رؤية الروم ودخوله):', error.message);
+        console.error('خطأ أثناء محاولة دخول الروم الصوتي:', error.message);
     }
 });
 
