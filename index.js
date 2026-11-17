@@ -9,7 +9,7 @@ const client = new Client({
 });
 
 // أيدي الروم الصوتي
-const VOICE_CHANNEL_ID = '1570321048673452142';
+const VOICE_CHANNEL_ID = '1570325536427868192';
 
 client.once('ready', async () => {
     console.log(`تم تسجيل الدخول بنجاح باسم ${client.user.tag}`);
