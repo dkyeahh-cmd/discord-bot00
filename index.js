@@ -17,7 +17,7 @@ client.once('ready', async () => {
     // ضبط حالة البوت على Streaming بشكل صحيح ومفعل
     client.user.setPresence({
         activities: [{
-            name: 'اسم البوت أو الحالة حقك هنا',
+            name: '.',
             type: ActivityType.Streaming,
             url: 'https://www.twitch.tv/twitch' // رابط توتش ضروري عشان تظهر علامة البث البنفسجية
         }],
