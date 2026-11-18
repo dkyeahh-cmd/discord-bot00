@@ -1,6 +1,20 @@
 const { Client, GatewayIntentBits, ActivityType } = require('discord.js');
 const { joinVoiceChannel } = require('@discordjs/voice');
+const express = require('express');
 
+// إنشاء سيرفر ويب بسيط عشان Render يفتح بورت وما يعطي Timeout
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+app.get('/', (req, res) => {
+    res.send('Bot is running and alive 24/7!');
+});
+
+app.listen(PORT, () => {
+    console.log(`Web server is running on port ${PORT}`);
+});
+
+// إعدادات بوت الديسكورد
 const client = new Client({
     intents: [
         GatewayIntentBits.Guilds,
@@ -8,23 +22,22 @@ const client = new Client({
     ]
 });
 
-// أيدي الروم الصوتي
-const VOICE_CHANNEL_ID = '1570291534618951693';
+const VOICE_CHANNEL_ID = '1570321048673452142';
 
 client.once('ready', async () => {
     console.log(`تم تسجيل الدخول بنجاح باسم ${client.user.tag}`);
 
-    // ضبط حالة البوت على Streaming بشكل صحيح ومفعل
+    // ضبط الحالة على Streaming
     client.user.setPresence({
         activities: [{
             name: '.',
             type: ActivityType.Streaming,
-            url: 'https://www.twitch.tv/twitch' // رابط توتش ضروري عشان تظهر علامة البث البنفسجية
+            url: 'https://www.twitch.tv/twitch'
         }],
         status: 'online',
     });
 
-    // محاولة دخول الروم الصوتي مع عكس إعدادات المايك والسماعة
+    // دخول الروم الصوتي مع عكس المايك والسماعة
     try {
         const channel = await client.channels.fetch(VOICE_CHANNEL_ID);
         if (channel && channel.isVoiceBased()) {
@@ -32,8 +45,8 @@ client.once('ready', async () => {
                 channelId: channel.id,
                 guildId: channel.guild.id,
                 adapterCreator: channel.guild.voiceAdapterCreator,
-                selfDeaf: true,   // السماعة مغلقة (Deafened)
-                selfMute: false   // المايك مفتوح (Unmuted)
+                selfDeaf: true,   // السماعة مغلقة
+                selfMute: false   // المايك مفتوح
             });
             console.log(`تم بنجاح الانضمام للروم الصوتي: ${channel.name}`);
         } else {
@@ -44,10 +57,8 @@ client.once('ready', async () => {
     }
 });
 
-// منع البوت من الإغلاق بسبب الأخطاء المفاجئة
 process.on('unhandledRejection', error => {
     console.error('خطأ غير معالج تم تجنبه:', error);
 });
 
-// تسجيل الدخول باستخدام متغير البيئة السري
 client.login(process.env.DISCORD_TOKEN);
